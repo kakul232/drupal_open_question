@@ -1,0 +1,7 @@
+name = Frankly Open Question
+description = embedded widget
+core = 7.x
+
+dependencies[] = frankly_widget
+configure = admin/config/frankly_open_question
+package=frankly

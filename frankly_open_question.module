@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * Implements hook_help().
+ */
+
+function frankly_open_question_help($path, $arg) {
+  if ($path == 'admin/help#frankly_open_question') {
+    return t('A demonstration module.');
+  }
+}
+/********************************************* Config With Menu ************************************************/
+/**
+ * Implements hook_menu().
+ */
+function frankly_open_question_menu() {
+  $items['admin/config/frankly_open_question'] = array(
+    'title' => 'Welcome To Frankly configure',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('frankly_open_question_form'),
+    'access arguments' => array('administer users'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+function frankly_open_question_form($form, &$form_state) {
+  $form['frankly_op_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Question URL'),
+    '#rows' => 5,
+    '#required' => TRUE,
+    '#default_value' => variable_get('frankly_op_url'),
+  );
+
+  return system_settings_form($form);
+}
+
+
+/********************************************* BLOCK MODULE ************************************************/
+
+function frankly_open_question_block_info() {
+
+  $blocks['frankly_block'] = array(
+    'info' => t('Frankly Open Question'),
+    // DRUPAL_CACHE_PER_ROLE will be assumed.
+  );
+
+  return $blocks;
+}
+
+
+
+function frankly_open_question_block_view($delta = '') {
+  // This example is adapted from node.module.
+  $block = array();
+  $find_slug=str_replace("https://frankly.me/widgets/openQuestionPage/","",variable_get('frankly_op_url'));
+  $find_slug=explode('/',$find_slug);
+  $user=$find_slug[0];
+  $slug=$find_slug[1];
+
+
+  $block['content']= '<iframe frameborder="0" style="width: 300px; height:  500px; margin:auto;" src="https://frankly.me/widgets/openQuestionWidget/'.$user.'/'.$slug.'?flagRedirect=false&amp;url=http://embed.frankly.me/v2/"></iframe>';
+  return $block;
+}
